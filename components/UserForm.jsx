@@ -1,6 +1,6 @@
 import useMe from '@/hooks/useMe';
 import {
-  Box, Button,
+  Box, Button, ButtonGroup,
   FormControl, FormErrorMessage, FormHelperText, FormLabel,
   Input,
   NumberDecrementStepper, NumberIncrementStepper, NumberInput, NumberInputField, NumberInputStepper,
@@ -8,6 +8,7 @@ import {
 } from '@chakra-ui/react';
 import axios from 'axios';
 import { useEffect, useState } from 'react';
+import { useRouter } from 'next/router';
 
 const MIN_AGE = 0;
 const MAX_AGE = 150;
@@ -17,6 +18,7 @@ const MIN_HEIGHT = 0;
 const MAX_HEIGHT = 500;
 
 export default function UserForm() {
+  const router = useRouter();
   const { me, isLoading, isError, mutate } = useMe();
   const [email, setEmail] = useState('');
   const [age, setAge] = useState(0);
@@ -48,7 +50,15 @@ export default function UserForm() {
     setHeight(valueAsNumber);
   }
 
-  const onSave = async (e) => {
+
+  const onClickReset = (e) => {
+    e.preventDefault();
+    setAge(me.age);
+    setWeight(me.weight);
+    setHeight(me.height);
+  }
+
+  const onClickSave = async (e) => {
     e.preventDefault();
     setIsSaving(true);
     let updatedUser = null;
@@ -73,13 +83,18 @@ export default function UserForm() {
     setIsSaving(false);
   }
 
+  const onClickSignOut = (e) => {
+    e.preventDefault();
+    router.push('/api/auth/logout');
+  }
+
   if (isError) {
     console.log('Error in loading UserForm component');
   }
 
   return <Box>
     <Skeleton isLoaded={!isLoading}>
-      <Stack>
+      <Stack spacing='4'>
         <FormControl>
           <FormLabel>Email address</FormLabel>
           <Input type='email' isReadOnly value={email} />
@@ -131,16 +146,30 @@ export default function UserForm() {
               : <FormErrorMessage>Height must be greater than 0</FormErrorMessage>
           }
         </FormControl>
-        <FormControl>
-          <Button
-            colorScheme='teal'
-            isDisabled={!isAgeValid() || !isWeightValid() || !isHeightValid()}
-            loadingText='Saving...'
-            isLoading={isSaving}
-            onClick={onSave}
-          >
-            Save Changes
-          </Button>
+        <FormControl textAlign='center'>
+          <ButtonGroup>
+            <Button
+              colorScheme='gray'
+              onClick={onClickReset}
+            >
+              Reset Changes
+            </Button>
+            <Button
+              colorScheme='teal'
+              isDisabled={!isAgeValid() || !isWeightValid() || !isHeightValid()}
+              loadingText='Saving...'
+              isLoading={isSaving}
+              onClick={onClickSave}
+            >
+              Save Changes
+            </Button>
+            <Button
+              colorScheme='red'
+              onClick={onClickSignOut}
+            >
+              Sign Out
+            </Button>
+          </ButtonGroup>
         </FormControl>
       </Stack>
     </Skeleton>
