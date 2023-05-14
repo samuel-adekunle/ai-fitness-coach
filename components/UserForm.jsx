@@ -88,10 +88,6 @@ export default function UserForm() {
     router.push('/api/auth/logout');
   }
 
-  if (isError) {
-    console.log('Error in loading UserForm component');
-  }
-
   return <Box>
     <Skeleton isLoaded={!isLoading}>
       <Stack spacing='4'>

@@ -1,4 +1,5 @@
 import Footer from '@/components/Footer';
+import Plans from '@/components/Plans';
 import Head from '@/components/Head';
 import UserForm from '@/components/UserForm';
 import { withPageAuthRequired } from '@auth0/nextjs-auth0/client';
@@ -9,7 +10,8 @@ function Home() {
     <>
       <Head title={'Home'} />
       <main>
-        <Box paddingY='8'>
+        <Stack spacing='8' paddingY='8'>
+        <Box>
           <Container>
             <Stack>
               <Heading textAlign='center' as='h1' size='xl'>{process.env.NEXT_PUBLIC_APP_NAME}</Heading>
@@ -17,11 +19,17 @@ function Home() {
             </Stack>
           </Container>
         </Box>
-        <Box pb='8'>
+        <Box>
           <Container>
             <UserForm />
           </Container>
         </Box>
+        <Box>
+          <Container>
+            <Plans />
+          </Container>
+        </Box>
+        </Stack>
       </main>
       <Footer />
     </>
