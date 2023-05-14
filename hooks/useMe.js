@@ -2,7 +2,7 @@ import swr from 'swr';
 import { fetcher } from '@/lib/fetcher';
 
 export default function useMe() {
-  const { data, error, isLoading } = swr('/api/me', fetcher);
+  const { data, error, isLoading, mutate } = swr('/api/me', fetcher);
 
   if (data && !data.success) {
     console.log(data.error)
@@ -11,6 +11,7 @@ export default function useMe() {
   return {
     me: data && data.data,
     isLoading,
-    isError: (data && !data.success) || error
+    isError: (data && !data.success) || error,
+    mutate,
   };
 }

@@ -35,8 +35,23 @@ async function MeHandler(req, res) {
         return errorResponse(res, 500, 'Error finding current user');
       }
     }
+    case 'PUT': {
+      try {
+        const { user: auth0User } = await getSession(req, res)
+        let user = await User.findOneAndUpdate({ email: auth0User.email }, req.body);
+        if (!user) {
+          // NOTE: This should never happen
+          return errorResponse(res, 404, 'User not found');
+        }
+        return successResponse(res, 200, user);
+      }
+      catch (error) {
+        console.log(error);
+        return errorResponse(res, 500, 'Error updating user');
+      }
+    }
     default: {
-      res.setHeader('Allow', ['GET']);
+      res.setHeader('Allow', ['GET', 'PUT']);
       return errorResponse(res, 405, `Method ${method} not allowed`);
     }
   }
