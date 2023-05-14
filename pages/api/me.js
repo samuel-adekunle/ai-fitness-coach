@@ -9,17 +9,8 @@ async function createNewUser(auth0User) {
   })
 }
 
-async function getCurrentUser(auth0User) {
-  const user = await User.findOne({ email: auth0User.email });
-  if (!user) {
-    return await createNewUser(auth0User);
-  }
-  return user;
-}
-
 async function MeHandler(req, res) {
   const { method } = req
-  const { id } = req.query
 
   try {
     await dbConnect();
@@ -33,12 +24,15 @@ async function MeHandler(req, res) {
     case 'GET': {
       try {
         const { user: auth0User } = await getSession(req, res)
-        const user = await getCurrentUser(auth0User);
+        let user = await User.findOne({ email: auth0User.email });
+        if (!user) {
+          user = await createNewUser(auth0User);
+        }
         return successResponse(res, 200, user);
       }
       catch (error) {
         console.log(error);
-        return errorResponse(res, 500, `Error finding user ${id}`);
+        return errorResponse(res, 500, 'Error finding current user');
       }
     }
     default: {
