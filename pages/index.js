@@ -1,6 +1,7 @@
 import Head from 'next/head'
+import { withPageAuthRequired } from '@auth0/nextjs-auth0/client'
 
-export default function Home() {
+function Home() {
   return (
     <>
       <Head>
@@ -12,3 +13,5 @@ export default function Home() {
     </>
   )
 }
+
+export default withPageAuthRequired(Home);
