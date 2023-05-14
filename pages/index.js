@@ -1,14 +1,18 @@
-import Head from 'next/head'
+import Head from '@/components/Head';
+import UserForm from '@/components/UserForm';
 import { withPageAuthRequired } from '@auth0/nextjs-auth0/client'
+import { Box, Container } from '@chakra-ui/react'
 
 function Home() {
   return (
     <>
-      <Head>
-        <title>GymBuddy</title>
-      </Head>
+      <Head title={'Home'} />
       <main>
-        <h1>GymBuddy</h1>
+        <Box>
+          <Container>
+            <UserForm />
+          </Container>
+        </Box>
       </main>
     </>
   )
