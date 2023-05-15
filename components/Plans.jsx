@@ -27,31 +27,32 @@ export default function Plans() {
 
   return <Box>
     <Stack spacing='4'>
+      <Box>
+        <Heading size='xl' as='h2' textAlign='center'>Personalised Plans</Heading>
+      </Box>
       <Skeleton isLoaded={!isLoading}>
         <Center textAlign='center'>
-        <Box>
-          <FormControl isInvalid={!isVerified}>
-            <Button
-              colorScheme="blue" size="lg"
-              isLoading={isGenerating}
-              loadingText="Generating Plans..."
-              onClick={onClickGeneratePlans}
-              isDisabled={!isVerified}
-            >
-              Generate Plans
-            </Button>
-            {
-              isVerified
-                ? <FormHelperText>Click the button to generate workout and meal plans.</FormHelperText>
-                : <FormErrorMessage>Please verify your email address to generate plans.</FormErrorMessage>
-            }
-          </FormControl>
-        </Box>
+          <Box>
+            <FormControl isInvalid={!isVerified}>
+              <Button
+                colorScheme="blue" size="lg"
+                isLoading={isGenerating}
+                loadingText="Generating Plans..."
+                onClick={onClickGeneratePlans}
+                isDisabled={!isVerified}
+              >
+                Generate Plans
+              </Button>
+              {
+                isVerified 
+                  ? <FormHelperText>Click the button to generate personalised workout and meal plans.</FormHelperText>
+                  : <FormErrorMessage>Please verify your email address to generate personalised plans.</FormErrorMessage>
+              }
+            </FormControl>
+          </Box>
         </Center>
-        
       </Skeleton>
       <Box hidden={!plans}>
-        <Heading size='lg'>Plans:</Heading>
         <Text>{plans}</Text>
       </Box>
     </Stack>

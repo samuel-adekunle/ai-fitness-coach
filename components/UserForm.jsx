@@ -143,7 +143,7 @@ export default function UserForm() {
           }
         </FormControl>
         <FormControl textAlign='center'>
-          <ButtonGroup>
+          <Stack spacing='2'>
             <Button
               colorScheme='gray'
               onClick={onClickReset}
@@ -165,7 +165,7 @@ export default function UserForm() {
             >
               Sign Out
             </Button>
-          </ButtonGroup>
+          </Stack>
         </FormControl>
       </Stack>
     </Skeleton>
