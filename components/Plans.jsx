@@ -102,7 +102,7 @@ export default function Plans() {
           {
             plans && <MealPlan plan={plans["Meal Plan"]} />
           }
-          {/* TODO(samuel-adekunle): Create Workout Plan Prompt and UI */}
+          {/* TODO(samuel-adekunle): Create Workout Plan*/}
         </Stack>
       </Skeleton>
     </Stack>
