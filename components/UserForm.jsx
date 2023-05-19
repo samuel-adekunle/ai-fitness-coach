@@ -91,7 +91,6 @@ export default function UserForm() {
 
   useEffect(() => {
     if (me) {
-      console.log(me);
       setEmail(me.email);
       setAge(me.age);
       setWeight(me.weight);

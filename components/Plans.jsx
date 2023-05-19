@@ -1,7 +1,53 @@
-import { Box, Button, Text, Heading, Stack, FormControl, FormHelperText, FormErrorMessage, Skeleton, Center } from '@chakra-ui/react'
+import { Box, Button, Heading, Stack, FormControl, FormHelperText, FormErrorMessage, Skeleton } from '@chakra-ui/react'
 import { useState } from 'react'
 import axios from 'axios'
 import { useUser } from '@auth0/nextjs-auth0/client';
+
+function MealPlan({ plan }) {
+  function Meal({ meal }) {
+    return <Box>
+      <ul>
+        {
+          Object.keys(meal).map((key) => <li>{key}: {meal[key]}</li>)
+        }
+      </ul>
+    </Box>
+  }
+
+  function MealPlanDay({ dayPlan }) {
+    return <Stack spacing='2'>
+      <Heading size='sm' as='h4'>Day {dayPlan["Day"]}</Heading>
+      <Stack spacing='2'>
+        <Box>
+          <Heading size='xs' as='h5'>Breakfast</Heading>
+          <Meal meal={dayPlan["Breakfast"]} />
+        </Box>
+        <Box>
+          <Heading size='xs' as='h5'>Lunch</Heading>
+          <Meal meal={dayPlan["Lunch"]} />
+        </Box>
+        <Box>
+          <Heading size='xs' as='h5'>Snack</Heading>
+          <Meal meal={dayPlan["Snack"]} />
+        </Box>
+        <Box>
+          <Heading size='xs' as='h5'>Dinner</Heading>
+          <Meal meal={dayPlan["Dinner"]} />
+        </Box>
+
+      </Stack>
+    </Stack>
+  }
+
+  return <Stack spacing='2'>
+    <Heading size='md' as='h3'>Meal Plan</Heading>
+    <Stack spacing='3'>
+      {
+        plan.map((dayPlan) => <MealPlanDay dayPlan={dayPlan} />)
+      }
+    </Stack>
+  </Stack>
+}
 
 export default function Plans() {
   const [plans, setPlans] = useState(null);
@@ -16,7 +62,7 @@ export default function Plans() {
     try {
       const res = await axios.post('/api/plans');
       if (!res.data.success) throw new Error(res.data.error);
-      setPlans(res.data.data);
+      setPlans(JSON.parse(res.data.data));
     }
     catch (error) {
       console.log(error);
@@ -51,10 +97,14 @@ export default function Plans() {
           }
         </FormControl>
       </Skeleton>
-      {/* TODO(samuel-adekunle): Create UI for Meal and Workout plans */}
-      <Box hidden={!plans}>
-        <Text>{plans}</Text>
-      </Box>
+      <Skeleton isLoaded={!isGenerating}>
+        <Stack>
+          {
+            plans && <MealPlan plan={plans["Meal Plan"]} />
+          }
+          {/* TODO(samuel-adekunle): Create Workout Plan Prompt and UI */}
+        </Stack>
+      </Skeleton>
     </Stack>
   </Box>
 }
