@@ -8,7 +8,7 @@ function MealPlan({ plan }) {
     return <Box>
       <ul>
         {
-          Object.keys(meal).map((key) => <li>{key}: {meal[key]}</li>)
+          Object.keys(meal).map((key) => <li key={key}>{key}: {meal[key]}</li>)
         }
       </ul>
     </Box>
@@ -43,7 +43,7 @@ function MealPlan({ plan }) {
     <Heading size='md' as='h3'>Meal Plan</Heading>
     <Stack spacing='3'>
       {
-        plan.map((dayPlan) => <MealPlanDay dayPlan={dayPlan} />)
+        plan.map((dayPlan) => <MealPlanDay key={dayPlan["Day"]} dayPlan={dayPlan} />)
       }
     </Stack>
   </Stack>
