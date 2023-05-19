@@ -4,6 +4,9 @@ import {
   FormControl, FormErrorMessage, FormHelperText, FormLabel,
   Input,
   NumberDecrementStepper, NumberIncrementStepper, NumberInput, NumberInputField, NumberInputStepper,
+  Radio,
+  RadioGroup,
+  Select,
   Skeleton, Stack
 } from '@chakra-ui/react';
 import axios from 'axios';
@@ -16,14 +19,35 @@ const MIN_WEIGHT = 0;
 const MAX_WEIGHT = 1000;
 const MIN_HEIGHT = 0;
 const MAX_HEIGHT = 500;
+const SEXES = ["Male", "Female"]
+const ACTIVITY_LEVELS = {
+  "Sedentary": {
+    "label": "Sedentary",
+    "description": "Little to no exercise"
+  },
+  "Lightly Active": {
+    "label": "Lightly Active",
+    "description": "Light exercise (1–3 days per week)"
+  },
+  "Moderately Active": {
+    "label": "Moderately Active",
+    "description": "Moderate exercise (3–5 days per week)"
+  },
+  "Very Active": {
+    "label": "Very Active",
+    "description": "Heavy exercise (6–7 days per week)"
+  },
+}
 
 export default function UserForm() {
   const router = useRouter();
-  const { me, isLoading, isError, mutate } = useMe();
+  const { me, isLoading, mutate } = useMe();
   const [email, setEmail] = useState('');
   const [age, setAge] = useState(0);
   const [weight, setWeight] = useState(0);
   const [height, setHeight] = useState(0);
+  const [sex, setSex] = useState('');
+  const [activityLevel, setActivityLevel] = useState('');
   const [isSaving, setIsSaving] = useState(false);
 
   useEffect(() => {
@@ -32,6 +56,8 @@ export default function UserForm() {
       setAge(me.age);
       setWeight(me.weight);
       setHeight(me.height);
+      setSex(me.sex);
+      setActivityLevel(me.activityLevel);
     }
   }, [me]);
 
@@ -50,12 +76,25 @@ export default function UserForm() {
     setHeight(valueAsNumber);
   }
 
+  const isSexValid = () => SEXES.includes(sex)
+  const onChangeSex = (value) => {
+    setSex(value);
+  }
+
+  const isActivityLevelValid = () => Object.keys(ACTIVITY_LEVELS).includes(activityLevel);
+  const onChangeActivityLevel = (e) => {
+    e.preventDefault();
+    setActivityLevel(e.target.value);
+  }
+
 
   const onClickReset = (e) => {
     e.preventDefault();
     setAge(me.age);
     setWeight(me.weight);
     setHeight(me.height);
+    setSex(me.sex);
+    setActivityLevel(me.activityLevel);
   }
 
   const onClickSave = async (e) => {
@@ -67,6 +106,8 @@ export default function UserForm() {
         age,
         weight,
         height,
+        sex,
+        activityLevel
       })
       if (!res.data.success) throw new Error(res.data.error);
       updatedUser = res.data.data;
@@ -95,6 +136,19 @@ export default function UserForm() {
           <FormLabel>Email address</FormLabel>
           <Input type='email' isReadOnly value={email} />
           <FormHelperText>We will never share your email.</FormHelperText>
+        </FormControl>
+        <FormControl isRequired isInvalid={!isSexValid()}>
+          <FormLabel>Sex</FormLabel>
+          <RadioGroup onChange={onChangeSex} value={sex}>
+            <Stack direction='row'>
+              {SEXES.map(_sex => <Radio key={_sex} value={_sex}>{_sex}</Radio>)}
+            </Stack>
+          </RadioGroup>
+          {
+            isSexValid()
+              ? <FormHelperText>Which sex should be used to calculate your calorie needs?</FormHelperText>
+              : <FormErrorMessage>Sex is required.</FormErrorMessage>
+          }
         </FormControl>
         <FormControl isRequired isInvalid={!isAgeValid()}>
           <FormLabel>Age</FormLabel>
@@ -142,6 +196,12 @@ export default function UserForm() {
               : <FormErrorMessage>Height must be greater than 0</FormErrorMessage>
           }
         </FormControl>
+        <FormControl isRequired isInvalid={!isActivityLevelValid()}>
+          <FormLabel>Activity Level</FormLabel>
+          <Select value={activityLevel} onChange={onChangeActivityLevel} placeholder="What is your baseline activity level?">
+            {Object.keys(ACTIVITY_LEVELS).map(level => <option key={level} value={level}>{`${level}: ${ACTIVITY_LEVELS[level].description}`}</option>)}
+          </Select>
+        </FormControl>
         <FormControl textAlign='center'>
           <Stack spacing='2'>
             <Button
@@ -152,7 +212,7 @@ export default function UserForm() {
             </Button>
             <Button
               colorScheme='teal'
-              isDisabled={!isAgeValid() || !isWeightValid() || !isHeightValid()}
+              isDisabled={!isAgeValid() || !isWeightValid() || !isHeightValid() || !isSexValid() || !isActivityLevelValid()}
               loadingText='Saving...'
               isLoading={isSaving}
               onClick={onClickSave}

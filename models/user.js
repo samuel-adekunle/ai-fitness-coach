@@ -20,6 +20,16 @@ const UserSchema = new mongoose.Schema({
     required: true,
     default: 0,
   },
+  sex: {
+    type: String,
+    required: true,
+    default: ""
+  },
+  activityLevel: {
+    type: String,
+    required: true,
+    default: ""
+  }
 });
 
 export default mongoose.models.User || mongoose.model('User', UserSchema);
