@@ -261,6 +261,7 @@ export default function UserForm() {
               {Object.keys(ACTIVITY_LEVELS).map(level => <option key={level} value={level}>{`${level}: ${ACTIVITY_LEVELS[level].description}`}</option>)}
             </Select>
           </FormControl>
+          <Heading size='md' as='h3'>Goals</Heading>
           <FormControl as={SimpleGrid} columns={{ base: 6 }}>
             {Object.keys(GOALS).map(goal => <Fragment key={goal}>
               <FormLabel htmlFor={goal}>{goal}</FormLabel>
