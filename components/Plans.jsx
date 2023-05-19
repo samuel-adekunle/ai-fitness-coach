@@ -28,30 +28,30 @@ export default function Plans() {
   return <Box>
     <Stack spacing='4'>
       <Box>
-        <Heading size='xl' as='h2' textAlign='center'>Personalised Plans</Heading>
+        <Heading size='lg' as='h2'>Personalised Plans</Heading>
       </Box>
       <Skeleton isLoaded={!isLoading}>
-        <Center textAlign='center'>
-          <Box>
-            <FormControl isInvalid={!isVerified}>
-              <Button
-                colorScheme="blue" size="lg"
-                isLoading={isGenerating}
-                loadingText="Generating Plans..."
-                onClick={onClickGeneratePlans}
-                isDisabled={!isVerified}
-              >
-                Generate Plans
-              </Button>
-              {
-                isVerified 
-                  ? <FormHelperText>Click the button to generate personalised workout and meal plans.</FormHelperText>
-                  : <FormErrorMessage>Please verify your email address to generate personalised plans.</FormErrorMessage>
-              }
-            </FormControl>
-          </Box>
-        </Center>
+        <FormControl isInvalid={!isVerified}>
+          <Stack>
+            <Button
+              colorScheme="blue" size="lg"
+              isLoading={isGenerating}
+              loadingText="Generating Plans..."
+              onClick={onClickGeneratePlans}
+              isDisabled={!isVerified}
+            >
+              Generate Plans
+            </Button>
+          </Stack>
+
+          {
+            isVerified
+              ? <FormHelperText>Click the button to generate personalised workout and meal plans.</FormHelperText>
+              : <FormErrorMessage>Please verify your email address to generate personalised plans.</FormErrorMessage>
+          }
+        </FormControl>
       </Skeleton>
+      {/* TODO(samuel-adekunle): Create UI for Meal and Workout plans */}
       <Box hidden={!plans}>
         <Text>{plans}</Text>
       </Box>

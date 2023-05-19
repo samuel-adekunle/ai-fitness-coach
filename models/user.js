@@ -29,6 +29,11 @@ const UserSchema = new mongoose.Schema({
     type: String,
     required: true,
     default: ""
+  },
+  goals: {
+    type: [String],
+    required: true,
+    default: []
   }
 });
 
