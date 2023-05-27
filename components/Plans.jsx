@@ -1,14 +1,14 @@
-import { Box, Button, Heading, Stack, FormControl, FormHelperText, FormErrorMessage, Skeleton } from '@chakra-ui/react'
-import { useState } from 'react'
-import axios from 'axios'
 import { useUser } from '@auth0/nextjs-auth0/client';
+import { Box, Button, FormControl, FormErrorMessage, FormHelperText, Heading, Skeleton, Stack } from '@chakra-ui/react';
+import axios from 'axios';
+import { useState } from 'react';
 
 function MealPlan({ plan }) {
   function Meal({ meal }) {
     return <Box>
       <ul>
         {
-          Object.keys(meal).map((key) => <li key={key}>{key}: {meal[key]}</li>)
+          Object.keys(meal)?.map((key) => <li key={key}>{key}: {meal[key]}</li>)
         }
       </ul>
     </Box>
@@ -34,7 +34,6 @@ function MealPlan({ plan }) {
           <Heading size='xs' as='h5'>Dinner</Heading>
           <Meal meal={dayPlan["Dinner"]} />
         </Box>
-
       </Stack>
     </Stack>
   }
@@ -43,7 +42,43 @@ function MealPlan({ plan }) {
     <Heading size='md' as='h3'>Meal Plan</Heading>
     <Stack spacing='3'>
       {
-        plan.map((dayPlan) => <MealPlanDay key={dayPlan["Day"]} dayPlan={dayPlan} />)
+        plan?.map((dayPlan) => <MealPlanDay key={dayPlan["Day"]} dayPlan={dayPlan} />)
+      }
+    </Stack>
+  </Stack>
+}
+
+function WorkoutPlan({ plan }) {
+
+  function Exercise({ exercise }) {
+    return <Box>
+      <Stack spacing='2'>
+        <Heading size='xs' as='h5'>{exercise["name"]}</Heading>
+        <ul>
+          <li>Sets: {exercise["sets"]}</li>
+          <li>Reps: {exercise["reps"]}</li>
+          <li>Rest: {exercise["rest"]}</li>
+        </ul>
+      </Stack>
+    </Box>
+  }
+
+  function WorkoutPlanDay({ dayPlan }) {
+    return <Stack spacing='2'>
+      <Heading size='sm' as='h4'>Day {dayPlan["Day"]} - {dayPlan["Workout"]} </Heading>
+      <Stack spacing='2'>
+        {
+          dayPlan["Exercises"]?.map((exercise) => <Exercise key={exercise["name"]} exercise={exercise} />)
+        }
+      </Stack>
+    </Stack>
+  }
+
+  return <Stack spacing='2'>
+    <Heading size='md' as='h3'>Workout Plan</Heading>
+    <Stack spacing='3'>
+      {
+        plan?.map((dayPlan) => <WorkoutPlanDay key={dayPlan["Day"]} dayPlan={dayPlan} />)
       }
     </Stack>
   </Stack>
@@ -102,7 +137,9 @@ export default function Plans() {
           {
             plans && <MealPlan plan={plans["Meal Plan"]} />
           }
-          {/* TODO(samuel-adekunle): Create Workout Plan*/}
+          {
+            plans && <WorkoutPlan plan={plans["Workout Plan"]} />
+          }
         </Stack>
       </Skeleton>
     </Stack>
