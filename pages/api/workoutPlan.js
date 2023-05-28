@@ -1,7 +1,7 @@
 import { errorResponse, successResponse } from '@/lib/apiResponses';
 import User from '@/models/user';
 import { withApiAuthRequired, getSession } from '@auth0/nextjs-auth0';
-import { generatePlans } from '@/lib/openai';
+import { generateWorkoutPlan } from '@/lib/openai';
 
 async function PlansHandler(req, res) {
   const { method } = req;
@@ -17,8 +17,8 @@ async function PlansHandler(req, res) {
         // NOTE: This should never happen
         return errorResponse(res, 404, 'User not found');
       }
-      const plans = await generatePlans(user);
-      return successResponse(res, 200, plans);
+      const plan = await generateWorkoutPlan(user);
+      return successResponse(res, 200, plan);
     }
     default: {
       res.setHeader('Allow', ['POST']);
