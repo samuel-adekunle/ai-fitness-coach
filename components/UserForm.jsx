@@ -84,8 +84,8 @@ export default function UserForm() {
   const [age, setAge] = useState(0);
   const [weight, setWeight] = useState(0);
   const [height, setHeight] = useState(0);
-  const [sex, setSex] = useState('');
-  const [activityLevel, setActivityLevel] = useState('');
+  const [sex, setSex] = useState('null');
+  const [activityLevel, setActivityLevel] = useState('null');
   const [goals, setGoals] = useState([]);
   const [isSaving, setIsSaving] = useState(false);
 

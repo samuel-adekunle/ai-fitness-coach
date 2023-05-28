@@ -23,12 +23,12 @@ const UserSchema = new mongoose.Schema({
   sex: {
     type: String,
     required: true,
-    default: ""
+    default: "null"
   },
   activityLevel: {
     type: String,
     required: true,
-    default: ""
+    default: "null"
   },
   goals: {
     type: [String],
