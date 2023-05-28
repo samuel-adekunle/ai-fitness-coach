@@ -97,6 +97,11 @@ export default function Plans() {
     }
   }, [me])
 
+  const onClickResetMealPlan = async (e) => {
+    e.preventDefault();
+    setMealPlan(JSON.parse(me.mealPlan));
+  }
+
   const onClickGenerateMealPlan = async (e) => {
     e.preventDefault();
     setIsGeneratingMealPlan(true);
@@ -132,6 +137,11 @@ export default function Plans() {
       mutate(updatedUser);
     }
     setIsSavingMealPlan(false);
+  }
+
+  const onClickResetWorkoutPlan = async (e) => {
+    e.preventDefault();
+    setWorkoutPlan(JSON.parse(me.workoutPlan));
   }
 
   const onClickGenerateWorkoutPlan = async (e) => {
@@ -182,12 +192,19 @@ export default function Plans() {
       <Stack spacing='3'>
         <FormControl isInvalid={!isVerified}>
           <Stack spacing='2'>
+          <Button
+              colorScheme="gray"
+              onClick={onClickResetMealPlan}
+              isDisabled={!isVerified || isSavingMealPlan || isGeneratingMealPlan}
+            >
+              Reset Meal Plan
+            </Button>
             <Button
               colorScheme="blue" size="md"
               isLoading={isGeneratingMealPlan}
               loadingText="Generating Meal Plan..."
               onClick={onClickGenerateMealPlan}
-              isDisabled={!isVerified || isSavingMealPlan || isGeneratingWorkoutPlan}
+              isDisabled={!isVerified || isSavingMealPlan}
             >
               Generate Meal Plan
             </Button>
@@ -196,7 +213,7 @@ export default function Plans() {
               isLoading={isSavingMealPlan}
               loadingText="Saving Meal Plan..."
               onClick={onClickSaveMealPlan}
-              isDisabled={!isVerified || isGeneratingMealPlan || isGeneratingWorkoutPlan}
+              isDisabled={!isVerified || isGeneratingMealPlan}
             >
               Save Meal Plan
             </Button>
@@ -218,11 +235,18 @@ export default function Plans() {
         <FormControl isInvalid={!isVerified}>
           <Stack>
             <Button
+              colorScheme="gray"
+              onClick={onClickResetWorkoutPlan}
+              isDisabled={!isVerified || isSavingWorkoutPlan || isGeneratingWorkoutPlan}
+            >
+              Reset Workout Plan
+            </Button>
+            <Button
               colorScheme="blue" size="md"
               isLoading={isGeneratingWorkoutPlan}
               loadingText="Generating Workout Plan..."
               onClick={onClickGenerateWorkoutPlan}
-              isDisabled={!isVerified || isSavingWorkoutPlan || isGeneratingMealPlan}
+              isDisabled={!isVerified || isSavingWorkoutPlan}
             >
               Generate Workout Plan
             </Button>
@@ -231,7 +255,7 @@ export default function Plans() {
               isLoading={isSavingWorkoutPlan}
               loadingText="Saving Workout Plan..."
               onClick={onClickSaveWorkoutPlan}
-              isDisabled={!isVerified || isGeneratingWorkoutPlan || isGeneratingMealPlan}
+              isDisabled={!isVerified || isGeneratingWorkoutPlan}
             >
               Save Workout Plan
             </Button>
