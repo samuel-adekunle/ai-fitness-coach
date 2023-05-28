@@ -1,7 +1,8 @@
 import { useUser } from '@auth0/nextjs-auth0/client';
-import { Box, Button, FormControl, FormErrorMessage, Heading, Stack } from '@chakra-ui/react';
+import { Box, Button, FormControl, FormErrorMessage, Heading, Skeleton, Stack } from '@chakra-ui/react';
 import axios from 'axios';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import useMe from '@/hooks/useMe';
 
 function MealPlan({ plan }) {
   function Meal({ meal }) {
@@ -81,10 +82,20 @@ export default function Plans() {
   const [mealPlan, setMealPlan] = useState([]);
   const [workoutPlan, setWorkoutPlan] = useState([]);
   const [isGeneratingMealPlan, setIsGeneratingMealPlan] = useState(false);
+  const [isSavingMealPlan, setIsSavingMealPlan] = useState(false);
   const [isGeneratingWorkoutPlan, setIsGeneratingWorkoutPlan] = useState(false);
-  const { user: auth0User } = useUser();
+  const [isSavingWorkoutPlan, setIsSavingWorkoutPlan] = useState(false);
+  const { user: auth0User, isLoadingUser } = useUser();
+  const { me, isLoadingMe, mutate } = useMe();
 
   const isVerified = auth0User?.email_verified ?? false;
+
+  useEffect(() => {
+    if (me) {
+      setMealPlan(JSON.parse(me.mealPlan));
+      setWorkoutPlan(JSON.parse(me.workoutPlan));
+    }
+  }, [me])
 
   const onClickGenerateMealPlan = async (e) => {
     e.preventDefault();
@@ -99,6 +110,28 @@ export default function Plans() {
       window.alert('Failed to generate meal plan.');
     }
     setIsGeneratingMealPlan(false);
+  }
+
+  const onClickSaveMealPlan = async (e) => {
+    e.preventDefault();
+    setIsSavingMealPlan(true);
+    let updatedUser = null;
+    try {
+      const res = await axios.put('/api/me', {
+        ...me, 
+        mealPlan: JSON.stringify(mealPlan)
+      })
+      if (!res.data.success) throw new Error(res.data.error);
+      updatedUser = res.data.data;
+    }
+    catch (error) {
+      console.log(error);
+      window.alert('Failed to save meal plan.');
+    }
+    if (updatedUser) {
+      mutate(updatedUser);
+    }
+    setIsSavingMealPlan(false);
   }
 
   const onClickGenerateWorkoutPlan = async (e) => {
@@ -116,12 +149,36 @@ export default function Plans() {
     setIsGeneratingWorkoutPlan(false);
   }
 
+  const onClickSaveWorkoutPlan = async (e) => {
+    e.preventDefault();
+    setIsSavingWorkoutPlan(true);
+    let updatedUser = null;
+    try {
+      const res = await axios.put('/api/me', {
+        ...me,
+        workoutPlan: JSON.stringify(workoutPlan)
+      })
+      if (!res.data.success) throw new Error(res.data.error);
+      updatedUser = res.data.data;
+    }
+    catch (error) {
+      console.log(error);
+      window.alert('Failed to save workout plan.');
+    }
+    if (updatedUser) {
+      mutate(updatedUser);
+    }
+    setIsSavingWorkoutPlan(false);
+  }
+
   return <Stack spacing='4'>
     <Stack spacing='3'>
       <Box>
         <Heading size='lg' as='h2'>Meal Plan</Heading>
       </Box>
-      <MealPlan plan={mealPlan} />
+      <Skeleton isLoaded={!isLoadingUser && !isLoadingMe}>
+        <MealPlan plan={mealPlan} />
+      </Skeleton>
       <Stack spacing='3'>
         <FormControl isInvalid={!isVerified}>
           <Stack spacing='2'>
@@ -130,12 +187,16 @@ export default function Plans() {
               isLoading={isGeneratingMealPlan}
               loadingText="Generating Meal Plan..."
               onClick={onClickGenerateMealPlan}
-              isDisabled={!isVerified}
+              isDisabled={!isVerified || isSavingMealPlan || isGeneratingWorkoutPlan}
             >
               Generate Meal Plan
             </Button>
             <Button
               colorScheme="teal" size="md"
+              isLoading={isSavingMealPlan}
+              loadingText="Saving Meal Plan..."
+              onClick={onClickSaveMealPlan}
+              isDisabled={!isVerified || isGeneratingMealPlan || isGeneratingWorkoutPlan}
             >
               Save Meal Plan
             </Button>
@@ -150,7 +211,9 @@ export default function Plans() {
       <Box>
         <Heading size='lg' as='h2'>Workout Plan</Heading>
       </Box>
-      <WorkoutPlan plan={workoutPlan} />
+      <Skeleton isLoaded={!isLoadingUser && !isLoadingMe}>
+        <WorkoutPlan plan={workoutPlan} />
+      </Skeleton>
       <Stack spacing='3'>
         <FormControl isInvalid={!isVerified}>
           <Stack>
@@ -159,12 +222,16 @@ export default function Plans() {
               isLoading={isGeneratingWorkoutPlan}
               loadingText="Generating Workout Plan..."
               onClick={onClickGenerateWorkoutPlan}
-              isDisabled={!isVerified}
+              isDisabled={!isVerified || isSavingWorkoutPlan || isGeneratingMealPlan}
             >
               Generate Workout Plan
             </Button>
             <Button
               colorScheme="teal" size="md"
+              isLoading={isSavingWorkoutPlan}
+              loadingText="Saving Workout Plan..."
+              onClick={onClickSaveWorkoutPlan}
+              isDisabled={!isVerified || isGeneratingWorkoutPlan || isGeneratingMealPlan}
             >
               Save Workout Plan
             </Button>

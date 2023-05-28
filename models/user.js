@@ -34,7 +34,17 @@ const UserSchema = new mongoose.Schema({
     type: [String],
     required: true,
     default: []
-  }
+  },
+  mealPlan: {
+    type: String,
+    required: true,
+    default: "[]"
+  },
+  workoutPlan: {
+    type: String,
+    required: true,
+    default: "[]"
+  },
 });
 
 export default mongoose.models.User || mongoose.model('User', UserSchema);
