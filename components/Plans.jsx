@@ -195,7 +195,7 @@ export default function Plans() {
           <Button
               colorScheme="gray"
               onClick={onClickResetMealPlan}
-              isDisabled={!isVerified || isSavingMealPlan || isGeneratingMealPlan}
+              isDisabled={!isVerified || isSavingMealPlan || isGeneratingMealPlan || isSavingWorkoutPlan || isGeneratingWorkoutPlan}
             >
               Reset Meal Plan
             </Button>
@@ -204,7 +204,7 @@ export default function Plans() {
               isLoading={isGeneratingMealPlan}
               loadingText="Generating Meal Plan..."
               onClick={onClickGenerateMealPlan}
-              isDisabled={!isVerified || isSavingMealPlan}
+              isDisabled={!isVerified || isSavingMealPlan || isSavingWorkoutPlan || isGeneratingWorkoutPlan}
             >
               Generate Meal Plan
             </Button>
@@ -213,7 +213,7 @@ export default function Plans() {
               isLoading={isSavingMealPlan}
               loadingText="Saving Meal Plan..."
               onClick={onClickSaveMealPlan}
-              isDisabled={!isVerified || isGeneratingMealPlan}
+              isDisabled={!isVerified || isGeneratingMealPlan || isSavingWorkoutPlan || isGeneratingWorkoutPlan}
             >
               Save Meal Plan
             </Button>
@@ -237,7 +237,7 @@ export default function Plans() {
             <Button
               colorScheme="gray"
               onClick={onClickResetWorkoutPlan}
-              isDisabled={!isVerified || isSavingWorkoutPlan || isGeneratingWorkoutPlan}
+              isDisabled={!isVerified || isSavingWorkoutPlan || isGeneratingWorkoutPlan || isSavingMealPlan || isGeneratingMealPlan}
             >
               Reset Workout Plan
             </Button>
@@ -246,7 +246,7 @@ export default function Plans() {
               isLoading={isGeneratingWorkoutPlan}
               loadingText="Generating Workout Plan..."
               onClick={onClickGenerateWorkoutPlan}
-              isDisabled={!isVerified || isSavingWorkoutPlan}
+              isDisabled={!isVerified || isSavingWorkoutPlan || isSavingMealPlan || isGeneratingMealPlan}
             >
               Generate Workout Plan
             </Button>
@@ -255,7 +255,7 @@ export default function Plans() {
               isLoading={isSavingWorkoutPlan}
               loadingText="Saving Workout Plan..."
               onClick={onClickSaveWorkoutPlan}
-              isDisabled={!isVerified || isGeneratingWorkoutPlan}
+              isDisabled={!isVerified || isGeneratingWorkoutPlan || isSavingMealPlan || isGeneratingMealPlan}
             >
               Save Workout Plan
             </Button>
